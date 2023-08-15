@@ -1,0 +1,40 @@
+import { useState, useContext, useEffect } from "react";
+import FeedbackContext from "../context/FeedbackContext";
+
+function RatingSelect({select}){
+    const [selected, setSelected] = useState(10);
+
+    const handleChange = (event) => {
+        // Converting it to a number by adding a +
+        const selectedVal = +event.currentTarget.value;
+        setSelected(selectedVal);
+        select(selectedVal);
+    }
+
+    const {feedbackEdit} = useContext(FeedbackContext)
+
+    useEffect(()=>{
+        setSelected(feedbackEdit.item.rating)
+    }, [feedbackEdit])
+
+    // Unordered Radio Buttons that will be styled
+    return (
+       <ul className="rating">
+         {Array.from({length: 10}, (_,i) =>{
+            return <li key={`rating-${i+1}`}>
+                <input 
+                  type="radio" 
+                  id={`num${i+1}`}
+                  name="rating"
+                  value={i+1}
+                  onChange={handleChange}
+                  checked={selected === i+1}
+                />
+                <label htmlFor={`num${i + 1}`}>{i + 1}</label>
+            </li>
+         })}
+       </ul>
+    )
+}
+
+export default RatingSelect;
